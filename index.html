@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kalkulator Fisika - Hukum Ohm</title>
+    <title>Kalkulator Hukum Ohm</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            background-image: url(bg3.jpg);
+            background-color: #f5f5f5;
+            background-image: url(bg4.jpg);
             background-size: cover;
-            height: 500px;
-            position: relative;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
+
         .container {
             max-width: 400px;
-            margin: 0 auto;
-            background-color: #f4f4f4;
+            margin: 50px auto;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+
+        h2 {
             text-align: center;
+            color: #007BFF;
         }
         label {
             display: block;
@@ -39,7 +40,7 @@
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: blue;
+            background-color: #007BFF;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -47,28 +48,99 @@
             margin-top: 10px;
         }
         .btn:hover {
-            background-color: cornflowerblue;
+            background-color: #0056b3;
         }
         .result {
             margin-top: 20px;
             font-weight: bold;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #f0f0f0;
         }
+        .result div {
+            margin-bottom: 5px;
+        }
+        .message {
+            font-style: italic;
+            color: red;
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Kalkulator Fisika - Hukum Ohm</h1>
-        <form method="post" action="kalkulator.php">
-            <label for="voltage">Tegangan (V)</label>
-            <input type="number" step="0.01" name="voltage" id="voltage" >
-            <label for="current">Arus (A)</label>
-            <input type="number" step="0.01" name="current" id="current" >
-            <label for="resistance">Resistansi (&#8486;)</label>
-            <input type="number" step="0.01" name="resistance" id="resistance" >
-            <input type="submit" name="calculate" value="Hitung" class="btn">
-        </form>
+    <<div class="container">
+        <h2>Kalkulator Hukum Ohm</h2>
+        <label for="voltage">Tegangan (V)</label>
+        <input type="number" step="0.01" name="voltage" id="voltage" placeholder="Masukkan nilai tegangan (V)">
+        <label for="current">Arus (A)</label>
+        <input type="number" step="0.01" name="current" id="current" placeholder="Masukkan nilai arus (A)">
+        <label for="resistance">Resistansi (&#8486;)</label>
+        <input type="number" step="0.01" name="resistance" id="resistance" placeholder="Masukkan nilai resistansi (&#8486;)">
+        <input type="button" value="Hitung" class="btn" onclick="calculate()">
+        <input type="button" value="Kembali" class="btn" onclick="resetForm()">
+        <div class="result" id="result-output"></div>
+        <div class="message" id="input-message">Mohon masukkan dua nilai yang diketahui.</div>
     </div>
+
+    <script>
+        function calculate() {
+            var voltage = parseFloat(document.getElementById('voltage').value);
+            var current = parseFloat(document.getElementById('current').value);
+            var resistance = parseFloat(document.getElementById('resistance').value);
+            var resultDiv = document.getElementById('result-output');
+            var inputMessageDiv = document.getElementById('input-message');
+
+            resultDiv.innerHTML = "";
+            inputMessageDiv.style.display = "none";
+            var successMessageDiv = document.createElement('div');
+            successMessageDiv.textContent = "Hasil Perhitungan Berhasil";
+            successMessageDiv.style.textAlign = "center";
+            successMessageDiv.style.marginTop = "10px";
+            successMessageDiv.style.color = "blue";
+            resultDiv.appendChild(successMessageDiv);
+
+            if ((!isNaN(voltage) && !isNaN(current)) || (!isNaN(voltage) && !isNaN(resistance)) || (!isNaN(current) && !isNaN(resistance))) {
+                inputMessageDiv.style.display = "none";
+                resultDiv.style.display = "block";
+
+                if (!isNaN(voltage) && !isNaN(current)) {
+                    var resistance_result = voltage / current;
+                    var result_round = resistance_result.toFixed(2);
+
+                    
+                    resultDiv.innerHTML += "<div>Nilai Tegangan: " + voltage + " V</div>";
+                    resultDiv.innerHTML += "<div>Nilai Arus: " + current + " A</div>";
+                    resultDiv.innerHTML += "<div><strong>Nilai Resistansi: " + result_round + " &#8486;</strong></div>";
+                } else if (!isNaN(voltage) && !isNaN(resistance)) {
+                    var current_result = voltage / resistance;
+                    var result_round = current_result.toFixed(2);
+
+                    resultDiv.innerHTML += "<div>Nilai Tegangan: " + voltage + " V</div>";
+                    resultDiv.innerHTML += "<div><strong>Nilai Arus: " + result_round + " A</strong></div>";
+                    resultDiv.innerHTML += "<div>Nilai Resistansi: " + resistance + " &#8486;</div>";
+                } else if (!isNaN(current) && !isNaN(resistance)) {
+                    var voltage_result = current * resistance;
+                    var result_round = voltage_result.toFixed(2);
+
+                    resultDiv.innerHTML += "<div><strong>Nilai Tegangan: " + result_round + " V</strong></div>";
+                    resultDiv.innerHTML += "<div>Nilai Arus: " + current + " A</div>";
+                    resultDiv.innerHTML += "<div>Nilai Resistansi: " + resistance + " &#8486;</div>";
+                }
+                
+            } else {
+                inputMessageDiv.style.display = "block";
+                resultDiv.style.display = "none";
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('voltage').value = '';
+            document.getElementById('current').value = '';
+            document.getElementById('resistance').value = '';
+            document.getElementById('result-output').style.display = "none";
+            document.getElementById('input-message').style.display = "none";
+        }
+    </script>
 </body>
+</html>
 <!DOCTYPE html>
 <html>
 <head>
